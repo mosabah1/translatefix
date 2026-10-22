@@ -668,6 +668,7 @@ def foreground_app():
 _nid = None
 _wndproc_ref = None
 _busy = threading.Lock()
+_seen_notes = set()        # اسباب التحوّل التي اخبرنا المستخدم بها مرة
 
 
 def notify(title, msg, beep=0x30):
@@ -714,8 +715,13 @@ def do_translate():
             except TranslateError as exc:
                 notify("تعذرت الترجمة", str(exc))
                 return
-            if note:
+            if note and note not in _seen_notes:
+                # مرة واحدة لكل سبب: اخبار المستخدم مفيد، وتكراره في كل
+                # ترجمة ازعاج يدفعه لتجاهل الاشعارات كلها.
+                _seen_notes.add(note)
                 notify("تحوّلت للمحرك الاحتياطي", note, beep=0x40)
+            elif note:
+                _log("تحوّل للاحتياطي (كُتم التكرار): %s" % note)
             if out.strip() == text.strip():
                 notify("لا تغيير", "رجعت الترجمة مطابقة للنص الأصلي.",
                        beep=0x40)
