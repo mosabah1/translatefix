@@ -14,8 +14,10 @@ Select text — or select nothing and it takes the current line — press
 detected automatically.
 
 > Sibling of [layoutfix](https://github.com/mosabah1/layoutfix), which fixes text
-> typed under the wrong keyboard layout. They are deliberately separate programs:
-> layoutfix never touches the network, and this one has to.
+> typed under the wrong keyboard layout with **Ctrl+Alt+L**. They are
+> deliberately separate programs: layoutfix never makes a network call, and
+> translation has to send your text to a third party. Run both — they share no
+> hotkeys.
 
 ---
 
