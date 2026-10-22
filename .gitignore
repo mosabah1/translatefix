@@ -1,0 +1,15 @@
+# PyInstaller build output
+build/
+dist/
+*.spec
+
+# generated
+translatefix.ico
+translatefix.log
+
+# NEVER commit this: it holds the user's DeepL API key
+settings.ini
+
+# Python
+__pycache__/
+*.pyc
