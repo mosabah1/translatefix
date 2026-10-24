@@ -4,8 +4,8 @@
 # (and to some antivirus heuristics) than one that says what it is.
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 0, 0, 0),
-    prodvers=(1, 0, 0, 0),
+    filevers=(1, 0, 1, 0),
+    prodvers=(1, 0, 1, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -20,13 +20,13 @@ VSVersionInfo(
         [StringStruct('CompanyName', 'Mohammed Sabah'),
          StringStruct('FileDescription',
                       'Translates the text you are typing with one shortcut'),
-         StringStruct('FileVersion', '1.0.0.0'),
+         StringStruct('FileVersion', '1.0.1.0'),
          StringStruct('InternalName', 'translatefix'),
          StringStruct('LegalCopyright',
                       'Copyright (c) 2026 Mohammed Sabah. MIT License.'),
          StringStruct('OriginalFilename', 'translatefix.exe'),
          StringStruct('ProductName', 'translatefix'),
-         StringStruct('ProductVersion', '1.0.0.0')])
+         StringStruct('ProductVersion', '1.0.1.0')])
     ]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]

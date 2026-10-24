@@ -33,13 +33,13 @@ import winreg
 from ctypes import wintypes
 
 APP_NAME = "translatefix"
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 # ---------------------------------------------------------------- الاعدادات --
 
 HOTKEY = "ctrl+alt+t"      # اختصار الترجمة
-PROVIDER = "deepl"         # deepl او google
-FALLBACK_PROVIDER = "google"   # محرك احتياطي اذا فشل الاساسي (فارغ = معطل)
+PROVIDER = "google"        # google (بلا مفتاح) او deepl (يحتاج مفتاحا)
+FALLBACK_PROVIDER = ""     # محرك احتياطي اذا فشل الاساسي (فارغ = معطل)
 DEEPL_API_KEY = ""         # مفتاحك من deepl.com/pro-api
 LANG_A = "AR"              # اللغة الاولى
 LANG_B = "EN-US"           # اللغة الثانية
@@ -93,13 +93,14 @@ DEFAULT_INI = """\
 ; الاختصار. امثلة: ctrl+alt+t  /  ctrl+shift+t  /  f9
 hotkey = ctrl+alt+t
 
-; محرك الترجمة: deepl (يحتاج مفتاحا) او google (بلا مفتاح)
-provider = deepl
+; محرك الترجمة: google يعمل فورا بلا مفتاح، و deepl يحتاج مفتاحا ادناه.
+provider = google
 
-; محرك احتياطي يُستخدم تلقائيا اذا فشل الاساسي - مثلا حين ينفد رصيد DeepL.
-; خطة DeepL Developer تعطي رصيدا لمرة واحدة لا حصة شهرية متجددة، فحين
-; ينفد تستمر الاداة بالعمل عبر هذا المحرك بدل ان تتوقف. اتركه فارغا لتعطيله.
-fallback_provider = google
+; محرك احتياطي يُستخدم تلقائيا اذا فشل الاساسي. يُترك فارغا مع google لانه
+; لا بديل له. اما اذا جعلت provider = deepl فاجعل هذا google: خطة DeepL
+; المجانية رصيد لمرة واحدة لا حصة متجددة، فحين ينفد تستمر الاداة بالعمل
+; بدل ان تتوقف.
+fallback_provider =
 
 ; مفتاحك من https://www.deepl.com/pro-api - الباقة المجانية تكفي
 ; احفظ هذا الملف لنفسك: المفتاح سر، ومن يملكه يستهلك حصتك

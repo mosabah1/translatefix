@@ -7,12 +7,18 @@
 يبتلع الخطأ ويعود للقيم الافتراضية بصمت - فيعدّل المستخدم اعداداته ولا
 يحدث شيء ولا يعرف لماذا.
 """
+import io
 import os
 import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import translatefix as t
+
+# نلتقط الافتراضيات المشحونة قبل ان تعبث بها الاختبارات
+DEFAULTS_SNAPSHOT = [(n, getattr(t, n)) for n in
+                     ("HOTKEY", "PROVIDER", "FALLBACK_PROVIDER", "LANG_B",
+                      "TIMEOUT", "NOTIFY")]
 
 results = []
 
@@ -82,6 +88,29 @@ check("القيمة الفارغة ألغت الافتراضي", t.FALLBACK_PROV
 load_from("[translatefix]\nhotkey =\n".encode("utf-8"))
 check("لكن الاختصار الفارغ يبقى على الافتراضي",
       t.HOTKEY == "ctrl+alt+t", "  -> %r" % t.HOTKEY)
+
+print("\n6) مستخدم جديد: يجب ان تعمل فورا بلا مفتاح\n")
+# هذا ما يحدث عند اول تشغيل: لا ملف اعدادات، فيُنشأ من DEFAULT_INI
+# وتُستخدم قيم الوحدة. شُحنت 1.0.0 بـ provider = deepl، فكان كل من
+# ينزّلها يرى اشعار "تحوّلت للمحرك الاحتياطي" في اول ضغطة.
+fresh = tempfile.mkdtemp()
+ini = os.path.join(fresh, "settings.ini")
+t.settings_path = lambda: ini
+for name, value in DEFAULTS_SNAPSHOT:
+    setattr(t, name, value)
+t.load_settings()
+check("لا يحتاج مفتاحا (provider ليس deepl)", t.PROVIDER != "deepl",
+      "  -> %r" % t.PROVIDER)
+check("ولا يحتاج احتياطيا ليعمل", t.FALLBACK_PROVIDER == "",
+      "  -> %r" % t.FALLBACK_PROVIDER)
+check("أُنشئ ملف الاعدادات", os.path.isfile(ini))
+created = io.open(ini, encoding="utf-8-sig").read()
+for key, want in (("provider", "google"), ("fallback_provider", "")):
+    line = [l.strip() for l in created.splitlines()
+            if l.strip().startswith(key)]
+    got = line[0].split("=", 1)[1].strip() if line else "(مفقود)"
+    check("القالب المكتوب: %s = %r" % (key, want), got == want,
+          "  -> %r" % got)
 
 print("\nالنتيجة:", "كل الاختبارات ناجحة" if all(results) else "فيه فشل")
 sys.exit(0 if all(results) else 1)
